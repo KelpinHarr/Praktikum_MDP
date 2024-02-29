@@ -1,0 +1,16 @@
+#Thu Feb 29 21:26:46 ICT 2024
+base.0=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.2=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\14\\classes.dex
+base.3=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\4\\classes.dex
+base.4=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=14/classes.dex
+path.3=4/classes.dex
+path.4=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
+renamed.4=classes5.dex

@@ -1,0 +1,10 @@
+#Thu Feb 29 21:26:46 ICT 2024
+base.0=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeExtDexDebugAndroidTest\\classes.dex
+base.1=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
+base.2=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\4\\classes.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=4/classes.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
