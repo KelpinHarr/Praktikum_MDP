@@ -44,9 +44,9 @@ open class Bank (var namaBank:String, var biayaTF:Int, var biayaVA:Int? = 0){
                     }
                 }
 
-                if (counter == 1){
-                    println("Tidak ada nasabah")
-                }
+            }
+            if (counter == 1){
+                println("Tidak ada nasabah")
             }
         }
     }

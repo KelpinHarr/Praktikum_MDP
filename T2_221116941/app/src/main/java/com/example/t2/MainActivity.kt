@@ -120,6 +120,34 @@ fun register(){
     }while(donepass)
 }
 
+fun login(){
+    println("LOGIN")
+    print("Username: ")
+    var username = readln()
+    print("Password: ")
+    var password = readln()
+//    println()
+
+    if (username == "admin" && password == "admin"){
+        menuAdmin()
+    }
+    else {
+        val cekUser = listUser.firstOrNull { it.username == username }
+        if (cekUser != null){
+            if (cekUser.password == password){
+                menuNasabah(cekUser)
+            }
+            else {
+                println("Password salah!")
+            }
+        }
+        else {
+            println("User tidak ditemukan")
+            println()
+        }
+    }
+}
+
 fun menuAdmin(){
     do {
         print("""
@@ -154,8 +182,8 @@ fun menuAdmin(){
                         Bank.listNasabah(1)
                         println("99. Back")
                         print(">> ")
-                        println()
                         var back = readln().toInt()
+                        println()
                         if (back == 99){
                             bool = false
                         }
@@ -216,28 +244,33 @@ fun menuAdmin(){
                 println()
 
                 if (pilihVA == 98){
+                    print("Nama VA: ")
                     var namaVA = readln()
+                    print("Kode VA: ")
                     var kodeVA = readln().toIntOrNull() ?: 0
 
                     if (listVA.filter { it.nama == namaVA }.isEmpty()){
                         if (namaVA.length > 0 && kodeVA in 100..999){
                             listVA.add(VirtualAccount(namaVA.toUpperCase(), kodeVA))
                             println("Berhasil menambahkan VA $namaVA dengan kode $kodeVA")
+                            println()
                         }
                         else{
                             println("Invalid Input! Nama VA tidak boleh kosong dan Kode VA harus terdiri dari 3 angka!")
+                            println()
                         }
                     }
                     else {
                         println("Nama VA sudah terdaftar!")
+                        println()
                     }
                 }
                 else if (pilihVA == 99){
                     cek2 = false
                 }
-                else if (pilihVA in 1..listVA.size){
-                    // ============= GATAUUU MAU DIAPAIN =============
-                }
+//                else if (pilihVA in 1..listVA.size){
+//                    // ============= GATAUUU MAU DIAPAIN =============
+//                }
             }while(cek2)
         }
         else if (menuAdmin == 3){
@@ -255,6 +288,7 @@ fun menuAdmin(){
 
 fun menuNasabah(nasabah:User){
     do {
+        println()
         print("""
             Welcome, ${nasabah.nama}
             Nomor Rekening: ${nasabah.bank.noRek}
@@ -323,9 +357,10 @@ fun daftarTransfer(u:User){
             print("Nomor Rekening: ")
             nomor = readln().toInt()
             var bank :Bank = u.bank
-            var getUser:User = listUser.filter { it.bank == bank }.first() { it.bank.noRek == nomor }
+            var getUser:User? = listUser.filter { it.bank == bank }.firstOrNull { it.bank.noRek == nomor }
             if (getUser == null){
                 println("Nomor Rekening Tidak Ditemukan!")
+                println()
             }
             else {
                 print("Tambahkan ${getUser.bank.noRek} - ${getUser.nama} ke Daftar Transfer?\n" +
@@ -348,15 +383,15 @@ fun daftarTransfer(u:User){
                 nomor = readln().toInt()
                 daftarTF = Bank.getNasabah(listUser.sortedBy { it.nama }, namaBank)
 
-                var getUser:User = User("-", "-", "-", Bank("-", 0), Tabungan("-", 0, 0.4, 0))
+                var getUser:User? = User("-", "-", "-", Bank("-", 0), Tabungan("-", 0, 0.4, 0))
                 if (namaBank == "BCA"){
-                    getUser = daftarTF.filter { it.bank is BCA }.first() { it.bank.noRek == nomor }
+                    getUser = daftarTF.filter { it.bank is BCA }.firstOrNull { it.bank.noRek == nomor }
                 }
                 else if (namaBank == "BNI"){
-                    getUser = daftarTF.filter { it.bank is BNI }.first() { it.bank.noRek == nomor }
+                    getUser = daftarTF.filter { it.bank is BNI }.firstOrNull { it.bank.noRek == nomor }
                 }
                 else if (namaBank == "CIMB"){
-                    getUser = daftarTF.filter { it.bank is CIMB }.first() { it.bank.noRek == nomor }
+                    getUser = daftarTF.filter { it.bank is CIMB }.firstOrNull { it.bank.noRek == nomor }
                 }
 
                 if (getUser == null){
@@ -385,29 +420,5 @@ fun daftarTransfer(u:User){
     }while(tf != "99")
 }
 
-fun login(){
-    println("LOGIN")
-    print("Username: ")
-    var username = readln()
-    print("Password: ")
-    var password = readln()
-    println()
 
-    val cekUser = listUser.first { it.username == username }
-
-    if (cekUser != null){
-        if (cekUser.password == password){
-            menuNasabah(cekUser)
-        }
-        else {
-            println("Password salah!")
-        }
-    }
-    else if (username.equals("admin") && password.equals("admin")){
-        menuAdmin()
-    }
-    else {
-        println("User tidak ditemukan")
-    }
-}
 

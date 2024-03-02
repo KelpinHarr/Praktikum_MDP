@@ -1,7 +1,7 @@
-#Thu Feb 29 21:26:46 ICT 2024
-base.0=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeExtDexDebugAndroidTest\\classes.dex
-base.1=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
-base.2=D\:\\DATA CALVIN\\KULIAH Sem 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\4\\classes.dex
+#Sat Mar 02 19:07:02 WIB 2024
+base.0=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeExtDexDebugAndroidTest\\classes.dex
+base.1=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
+base.2=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\4\\classes.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=4/classes.dex
