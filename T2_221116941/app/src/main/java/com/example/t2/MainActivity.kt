@@ -22,6 +22,10 @@ fun main(){
     listJenisTabungan.add(Tabungan("Silver", 10000, 0.01, 15000))
     listJenisTabungan.add(Tabungan("Gold", 15000, 0.025, 50000))
 
+//    var bank:Bank = Bank("abc",0,0)
+//
+//    listUser.add(User("Yanto", "yanto", "123", , Tabungan()))
+
     do {
         print("""
             Bank MDP
@@ -123,10 +127,9 @@ fun register(){
 fun login(){
     println("LOGIN")
     print("Username: ")
-    var username = readln()
+    var username = readln()!!
     print("Password: ")
-    var password = readln()
-//    println()
+    var password = readln()!!
 
     if (username == "admin" && password == "admin"){
         menuAdmin()
@@ -249,10 +252,10 @@ fun menuAdmin(){
                     print("Kode VA: ")
                     var kodeVA = readln().toIntOrNull() ?: 0
 
-                    if (listVA.filter { it.nama == namaVA }.isEmpty()){
+                    if (listVA.filter { it.kode == kodeVA }.isEmpty()){
                         if (namaVA.length > 0 && kodeVA in 100..999){
                             listVA.add(VirtualAccount(namaVA.toUpperCase(), kodeVA))
-                            println("Berhasil menambahkan VA $namaVA dengan kode $kodeVA")
+                            println("Berhasil menambahkan VA ${namaVA.toUpperCase()} dengan kode $kodeVA")
                             println()
                         }
                         else{
@@ -268,9 +271,6 @@ fun menuAdmin(){
                 else if (pilihVA == 99){
                     cek2 = false
                 }
-//                else if (pilihVA in 1..listVA.size){
-//                    // ============= GATAUUU MAU DIAPAIN =============
-//                }
             }while(cek2)
         }
         else if (menuAdmin == 3){
@@ -303,28 +303,28 @@ fun menuNasabah(nasabah:User){
             7. Logout
             >> 
         """.trimIndent())
-        var menuNasabah = readln().toInt()
+        var menuNasabah = readln()
         println()
-        if (menuNasabah == 1){
+        if (menuNasabah == "1"){
             //mutasi()
         }
-        else if (menuNasabah == 2){
+        else if (menuNasabah == "2"){
             daftarTransfer(nasabah)
         }
-        else if (menuNasabah == 3){
+        else if (menuNasabah == "3"){
             setor(nasabah)
         }
-        else if (menuNasabah == 4){
-            //tfAntarRekening()
+        else if (menuNasabah == "4"){
+            tfAntarRekening(nasabah)
         }
-        else if (menuNasabah == 5){
-            //tfAntarBank()
+        else if (menuNasabah == "5"){
+            tfAntarBank(nasabah)
         }
-        else if (menuNasabah == 6){
+        else if (menuNasabah == "6"){
             //tfVA()
         }
         else { print("") }
-    }while (menuNasabah != 7)
+    }while (menuNasabah != "7")
 }
 
 fun setor(u:User){
@@ -353,71 +353,252 @@ fun daftarTransfer(u:User){
             >> 
         """.trimIndent())
         var tf = readln()
+         println()
+
         if (tf == "1"){
-            print("Nomor Rekening: ")
-            nomor = readln().toInt()
-            var bank :Bank = u.bank
-            var getUser:User? = listUser.filter { it.bank == bank }.firstOrNull { it.bank.noRek == nomor }
-            if (getUser == null){
-                println("Nomor Rekening Tidak Ditemukan!")
+            do {
+                println("Daftar Transfer ${u.bank.namaBank}")
+                if (u.listRekening.isEmpty()){
+                    println("Tidak ada daftar transfer")
+                    println()
+                }
+                else {
+                    for((idx, i) in u.listRekening.withIndex()){
+                        println("${idx + 1}. ${i.daftarTransfer()}")
+                    }
+                }
+                print("98. Tambah Rekening\n" +
+                        "99. Back\n>> ")
+                var menuDaftarTF = readln().toInt()
+                println()
+                if (menuDaftarTF == 98){
+                    print("Nomor Rekening: ")
+                    nomor = readln().toInt()
+
+                    if(User.cekKembar(u.listRekening, nomor)) {
+                        menuDaftarTF = 99
+                        println("Nomor Rekening Sudah Terdaftar")
+                        println()
+                    }
+                    if (nomor == u.bank.noRek){
+                        menuDaftarTF = 99
+                        println("Ini Nomor Rekening Anda :)")
+                        println()
+                    }
+
+                    var getUser:User? = Bank.getNasabah(listUser, u.bank.namaBank).firstOrNull { it.bank.noRek == nomor }
+
+                    if (getUser == null){
+                        println("Nomor Rekening Tidak Ditemukan!")
+                        println()
+                    }
+                    else {
+                        print("Tambahkan ${getUser.bank.noRek} - ${getUser.nama} ke Daftar Transfer?\n" +
+                                "(Y/N): ")
+                        var confirm = readln()
+                        if (confirm == "Y"){
+                            u.listRekening.add(getUser)
+                            println("Berhasil menambahkan rekening")
+                            println()
+                        }
+                        else if (confirm == "N"){
+                            println("Gagal menambahkan rekening")
+                            println()
+                        }
+                    }
+                }
+            }while(menuDaftarTF != 99)
+        }
+        else if(tf == "2"){
+            do {
+                println("Daftar Transfer Antar Bank")
+                if (u.listBank.isEmpty()){
+                    println("Tidak ada daftar transfer")
+                    println()
+                }
+                else {
+                    for((idx, i) in u.listBank.withIndex()){
+                        println("${idx + 1}. ${i.daftarBank()}")
+                    }
+                }
+                print("98. Tambah Rekening\n" +
+                        "99. Back\n>> ")
+                var menuTF = readln().toInt()
+                println()
+                if (menuTF == 98){
+                    print("Bank: ")
+                    var namaBank = readln()
+                    if (namaBank == "BCA" || namaBank == "BNI" || namaBank == "CIMB"){
+                        print("Nomor Rekening: ")
+                        nomor = readln().toInt()
+
+                        if(User.cekKembar(u.listBank, nomor)) {
+                            menuTF = 99
+                            println("Nomor Rekening Sudah Terdaftar")
+                            println()
+                        }
+                        if (nomor == u.bank.noRek){
+                            menuTF = 99
+                            println("Ini Nomor Rekening Anda :)")
+                            println()
+                        }
+
+                        var getUser:User? = Bank.getNasabah(listUser.sortedBy { it.nama }.toMutableList(), namaBank).firstOrNull { it.bank.noRek == nomor }
+
+                        if (getUser == null){
+                            println("Nomor Rekening Tidak Ditemukan!")
+                            println()
+                        }
+                        else {
+                            print("Tambahkan ${getUser.bank.noRek} - ${getUser.nama} ke Daftar Transfer?\n" +
+                                    "(Y/N): ")
+                            var confirm = readln()
+                            if (confirm == "Y"){
+                                u.listBank.add(getUser)
+                                println("Berhasil menambahkan rekening")
+                                println()
+                            }
+                            else if (confirm == "N"){
+                                println("Gagal menambahkan rekening")
+                                println()
+                            }
+                        }
+                    }
+                    else{
+                        println("Nama Bank Tidak Valid!")
+                        println()
+                    }
+                }
+            } while(menuTF != 99)
+        }
+        else if(tf == "3"){
+            do {
+                println("Daftar Transfer VA")
+                if (u.listVA.isEmpty()){
+                    println("Tidak ada daftar VA")
+                    println()
+                }
+                else {
+                    for((idx, i) in u.listVA.withIndex()){
+                        println("${idx + 1}. ${i.daftarVA()}")
+                    }
+                }
+                print("98. Tambah VA\n" +
+                        "99. Back\n>> ")
+                var menuVA = readln().toInt()
+                println()
+
+                if (menuVA == 98){
+                    do {
+                        print("Nomor VA: ")
+                        var inputVA = readln()
+                        if (inputVA.length in 6..9){
+                            var VA = VirtualAccount.getVA(listVA, inputVA)
+                            if (VA == null){
+                                println("Nomor VA tidak terdaftar")
+                                println()
+                            }
+                            else {
+                                print("Tambahkan ${VA.nama} - $inputVA ke Daftar Transfer?\n" +
+                                        "(Y/N): ")
+                                var confirm = readln()
+                                if (confirm == "Y"){
+                                    u.listVA.add(usersVA(VA.nama, inputVA.toInt(), u))
+                                    println("Berhasil menambahkan VA")
+                                    println()
+                                }
+                                else if (confirm == "N"){
+                                    println("Gagal menambahkan VA")
+                                    println()
+                                }
+                            }
+                        }
+                        else {
+                            println("VA maksimal 6 digit")
+                            println()
+                        }
+                    } while(!(inputVA.length in 6..9))
+                }
+
+            } while(menuVA != 99)
+        }
+    }while(tf != "99")
+}
+
+fun tfAntarRekening(u:User){
+    do {
+        println("Transfer Antar Rekening: ")
+
+        if (u.listRekening.isEmpty()){
+            println("Tidak ada daftar transfer")
+            println()
+        }
+        else {
+            for((idx, i) in u.listRekening.withIndex()){
+                println("${idx + 1}. ${i.daftarTransfer()}")
+            }
+        }
+        println("99. Back")
+        print(">> ")
+        var menuTF = readln().toInt()
+        println()
+
+        if (menuTF in 1..u.listRekening.size){
+            var data_nasabah = u.listRekening[menuTF - 1]
+            print("Jumlah Transfer: ")
+            var jumlahTF = readln().toInt()
+
+            if (jumlahTF > u.saldo){
+                println("Saldo Anda tidak mencukupi")
                 println()
             }
             else {
-                print("Tambahkan ${getUser.bank.noRek} - ${getUser.nama} ke Daftar Transfer?\n" +
-                        "(Y/N): ")
-                var confirm = readln()
-                if (confirm == "Y"){
-                    u.listRekening.add(getUser)
-                    println("Berhasil menambahkan rekening")
-                }
-                else if (confirm == "N"){
-                    println("Gagal menambahkan rekening")
-                }
-            }
-        }
-        else if(tf == "2"){
-            print("Bank: ")
-            var namaBank = readln()
-            if (namaBank == "BCA" || namaBank == "BNI" || namaBank == "CIMB"){
-                print("Nomor Rekening: ")
-                nomor = readln().toInt()
-                daftarTF = Bank.getNasabah(listUser.sortedBy { it.nama }, namaBank)
-
-                var getUser:User? = User("-", "-", "-", Bank("-", 0), Tabungan("-", 0, 0.4, 0))
-                if (namaBank == "BCA"){
-                    getUser = daftarTF.filter { it.bank is BCA }.firstOrNull { it.bank.noRek == nomor }
-                }
-                else if (namaBank == "BNI"){
-                    getUser = daftarTF.filter { it.bank is BNI }.firstOrNull { it.bank.noRek == nomor }
-                }
-                else if (namaBank == "CIMB"){
-                    getUser = daftarTF.filter { it.bank is CIMB }.firstOrNull { it.bank.noRek == nomor }
-                }
-
-                if (getUser == null){
-                    println("Nomor Rekening Tidak Ditemukan!")
+                if (jumlahTF < 5000){
+                    println("Transfer minimal Rp 5000")
+                    println()
                 }
                 else {
-                    print("Tambahkan ${getUser.bank.noRek} - ${getUser.nama} ke Daftar Transfer?\n" +
-                            "(Y/N): ")
-                    var confirm = readln()
-                    if (confirm == "Y"){
-                        u.listBank.add(getUser)
-                        println("Berhasil menambahkan rekening")
-                    }
-                    else if (confirm == "N"){
-                        println("Gagal menambahkan rekening")
-                    }
+                    var sisa_saldo = u.saldo - jumlahTF
+                    println("Berhasil transfer Rp $jumlahTF ke ${data_nasabah.nama}")
+                    println("Sisa saldo Anda: Rp $sisa_saldo")
+                    u.saldo = sisa_saldo
+                    data_nasabah.saldo += jumlahTF
+                    println()
                 }
             }
-            else{
-                println("Nama Bank Tidak Valid!")
+        }
+    }while(menuTF != 99)
+}
+
+fun tfAntarBank(u:User){
+    do {
+        println("Transfer Antar Bank: ")
+        if (u.listBank.isEmpty()){
+            println("Tidak ada daftar rekening")
+        }
+        else {
+            for((idx, i) in u.listBank.withIndex()){
+                println("${idx + 1}. ${i.daftarBank()}")
             }
         }
-        else if(tf == "3"){
+        println("99. Back")
+        print(">> ")
+        var menuTF = readln().toInt()
 
+        if (menuTF in 1..u.listBank.size){
+            var data_nasabah = u.listBank[menuTF - 1]
+            if (data_nasabah.bank.namaBank == "BCA"){
+
+            }
+            else if (data_nasabah.bank.namaBank == "BNI"){
+
+            }
+            else if (data_nasabah.bank.namaBank == "CIMB"){
+
+            }
         }
-    }while(tf != "99")
+
+    } while(menuTF != 99)
 }
 
 

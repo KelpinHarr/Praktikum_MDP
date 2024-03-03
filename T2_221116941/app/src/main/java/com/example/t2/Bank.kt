@@ -6,19 +6,12 @@ open class Bank (var namaBank:String, var biayaTF:Int, var biayaVA:Int? = 0){
     var noRek:Int = 0
 
     companion object {
-        fun getNasabah(listNasabah:List<User>, namaBank: String) :List<User>{
-//            var list:MutableList<User> = mutableListOf()
-            var bank:Bank = Bank("ABC", 0, 0)
-            if (namaBank == "BCA"){
-                listNasabah.filter { it.bank is BCA }
+        fun getNasabah(listNasabah:MutableList<User>, namaBank: String) :MutableList<User>{
+            var list:MutableList<User> = mutableListOf()
+            for (i in listNasabah){
+                if (i.bank.namaBank == namaBank) list.add(i)
             }
-            else if (namaBank == "BNI"){
-                listNasabah.filter { it.bank is BNI }
-            }
-            else if (namaBank == "CIMB"){
-                listNasabah.filter { it.bank is CIMB }
-            }
-            return listNasabah
+            return list
         }
         fun listNasabah(idxBank :Int){
             var counter = 1
