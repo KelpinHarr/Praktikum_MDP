@@ -1,4 +1,4 @@
-#Sat Mar 02 19:07:01 WIB 2024
+#Mon Mar 04 08:28:03 WIB 2024
 base.0=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=D\:\\KULIAH\\Semester 6\\Praktikum_MDP\\T2_221116941\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\14\\classes.dex

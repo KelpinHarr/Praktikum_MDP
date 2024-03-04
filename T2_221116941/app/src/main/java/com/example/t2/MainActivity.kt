@@ -22,9 +22,13 @@ fun main(){
     listJenisTabungan.add(Tabungan("Silver", 10000, 0.01, 15000))
     listJenisTabungan.add(Tabungan("Gold", 15000, 0.025, 50000))
 
-//    var bank:Bank = Bank("abc",0,0)
-//
-//    listUser.add(User("Yanto", "yanto", "123", , Tabungan()))
+    listUser.add(User("Calvin", "calvin", "calvin", BCA(12345), listJenisTabungan[0], 100000))
+    listUser.add(User("Kelpin", "kelpin", "kelpin", BNI(67890), listJenisTabungan[1], 200000))
+    listUser.add(User("Calpin", "calpin", "calpin", CIMB(54321), listJenisTabungan[0], 120000))
+
+    listVA.add(VirtualAccount("GOPAY", 123))
+    listVA.add(VirtualAccount("OVO", 456))
+    listVA.add(VirtualAccount("DANA", 789))
 
     do {
         print("""
@@ -73,22 +77,31 @@ fun register(){
                 donepass = true
             }
             else {
-                print("""
+
+                donepass = false
+                var bankName = 0
+                do {
+                    print("""
                     Bank:
                     1. BCA
                     2. BNI
                     3. CIMB
                     >> 
                     """.trimIndent())
-                donepass = false
-                var bankName = readln().toInt()
-                print("""
-                    Jenis Tabungan: 
-                    1. Tabungan Silver
-                    2. Tabungan Gold
-                    >> 
-                """.trimIndent())
-                var jenis = readln().toInt()
+                    bankName = readln().toInt()
+                }while (!(bankName in 1..3))
+                println()
+                var jenis = 0
+                do {
+                    print("""
+                        Jenis Tabungan: 
+                        1. Tabungan Silver
+                        2. Tabungan Gold
+                        >> 
+                    """.trimIndent())
+                    jenis = readln().toInt()
+                }while (!(jenis in 1..2))
+                println()
 
                 var cekSetoran = true
                 do {
@@ -306,7 +319,7 @@ fun menuNasabah(nasabah:User){
         var menuNasabah = readln()
         println()
         if (menuNasabah == "1"){
-            //mutasi()
+            mutasi(nasabah)
         }
         else if (menuNasabah == "2"){
             daftarTransfer(nasabah)
@@ -321,10 +334,28 @@ fun menuNasabah(nasabah:User){
             tfAntarBank(nasabah)
         }
         else if (menuNasabah == "6"){
-            //tfVA()
+            tfVA(nasabah)
         }
         else { print("") }
     }while (menuNasabah != "7")
+}
+
+fun mutasi(u:User){
+    do {
+        println("Mutasi Rekening")
+        if (u.listMutasi.isEmpty()){
+            println("Tidak ada daftar mutasi")
+            println()
+        }
+        else {
+            for((idx, i) in u.listMutasi.withIndex()) {
+                println("${idx + 1}. ${i}")
+            }
+        }
+        println("99. Back")
+        print(">> ")
+        var menuMutasi = readln().toInt()
+    } while(menuMutasi != 99)
 }
 
 fun setor(u:User){
@@ -334,6 +365,7 @@ fun setor(u:User){
     if(setor > 5000){
         u.saldo += setor
         println("Berhasil Setor Rp $setor!")
+        u.listMutasi.add("(+ $setor) Setor")
     }
     else{
         println("Minimal Jumlah Setor Rp 5000")
@@ -360,7 +392,6 @@ fun daftarTransfer(u:User){
                 println("Daftar Transfer ${u.bank.namaBank}")
                 if (u.listRekening.isEmpty()){
                     println("Tidak ada daftar transfer")
-                    println()
                 }
                 else {
                     for((idx, i) in u.listRekening.withIndex()){
@@ -428,7 +459,10 @@ fun daftarTransfer(u:User){
                 if (menuTF == 98){
                     print("Bank: ")
                     var namaBank = readln()
-                    if (namaBank == "BCA" || namaBank == "BNI" || namaBank == "CIMB"){
+                    if (namaBank == u.bank.namaBank){
+                        println("Tambahkan Rekening Bank Selain ${u.bank.namaBank}")
+                    }
+                    else if (namaBank == "BCA" || namaBank == "BNI" || namaBank == "CIMB"){
                         print("Nomor Rekening: ")
                         nomor = readln().toInt()
 
@@ -554,7 +588,7 @@ fun tfAntarRekening(u:User){
             }
             else {
                 if (jumlahTF < 5000){
-                    println("Transfer minimal Rp 5000")
+                    println("Minimal Jumlah Transfer Rp 5000")
                     println()
                 }
                 else {
@@ -563,6 +597,9 @@ fun tfAntarRekening(u:User){
                     println("Sisa saldo Anda: Rp $sisa_saldo")
                     u.saldo = sisa_saldo
                     data_nasabah.saldo += jumlahTF
+
+                    u.listMutasi.add("(- $jumlahTF) Transfer ke ${data_nasabah.nama}")
+                    data_nasabah.listMutasi.add("(+ $jumlahTF) Transfer dari ${u.nama}")
                     println()
                 }
             }
@@ -582,24 +619,148 @@ fun tfAntarBank(u:User){
             }
         }
         println("99. Back")
+        println("** Anda akan dikenakan biaya admin ${u.bank.biayaTF}")
         print(">> ")
         var menuTF = readln().toInt()
 
         if (menuTF in 1..u.listBank.size){
             var data_nasabah = u.listBank[menuTF - 1]
-            if (data_nasabah.bank.namaBank == "BCA"){
-
+            print("Jumlah Transfer: ")
+            var jumlahTF = readln().toInt()
+            if (jumlahTF + u.bank.biayaTF > u.saldo){
+                println("Saldo Anda tidak mencukupi")
+                println()
             }
-            else if (data_nasabah.bank.namaBank == "BNI"){
+            else {
+                if (jumlahTF < 5000){
+                    println("Minimal Jumlah Transfer Rp 5000")
+                    println()
+                }
+                else {
+                    var sisa_saldo = u.saldo - (jumlahTF + u.bank.biayaTF)
+                    println("Berhasil transfer Rp $jumlahTF ke ${data_nasabah.nama}")
+                    println("Sisa saldo Anda: $sisa_saldo")
+                    u.saldo = sisa_saldo
+                    data_nasabah.saldo += jumlahTF
 
-            }
-            else if (data_nasabah.bank.namaBank == "CIMB"){
-
+                    u.listMutasi.add("(- $jumlahTF) Transfer ke ${data_nasabah.nama}")
+                    u.listMutasi.add("(- ${u.bank.biayaTF}) Biaya transfer antar bank")
+                    data_nasabah.listMutasi.add("(+ $jumlahTF) Transfer dari ${u.nama}")
+                    println()
+                }
             }
         }
-
     } while(menuTF != 99)
 }
 
+fun tfVA(u:User){
+    do {
+        println("Transfer Virtual Account")
 
+        if (u.listVA.isEmpty()){
+            println("Tidak ada daftar VA")
+        }
+        else {
+            for((idx, i) in u.listVA.withIndex()){
+                println("${idx + 1}. ${i.daftarVA()}")
+            }
+        }
+        println("98. Input Nomor VA")
+        println("99. Back")
+        println("** Anda akan dikenakan biaya admin ${u.bank.biayaVA}")
+        print(">> ")
+        var menuTF = readln().toInt()
 
+        if (menuTF in 1..listVA.size){
+            var dataVA = u.listVA[menuTF - 1]
+            print("Jumlah Transfer: ")
+            var jumlahTF = readln().toInt()
+            if (jumlahTF + u.bank.biayaVA!! > u.saldo){
+                println("Saldo Anda tidak mencukupi")
+            }
+            else {
+                var sisa_saldo = u.saldo - (jumlahTF + u.bank.biayaVA!!)
+                println("Berhasil transfer Rp $jumlahTF ke ${dataVA.nama} ${dataVA.kode}")
+                println("Sisa saldo Anda: Rp $sisa_saldo")
+                u.saldo = sisa_saldo
+                u.listMutasi.add("(- $jumlahTF) Transfer ke VA ${dataVA.nama} ${dataVA.kode}")
+                u.listMutasi.add("(- ${u.bank.biayaVA}) Biaya admin VA")
+            }
+        }
+        else if (menuTF == 98){
+            do {
+                print("Input Nomor VA: ")
+                var inputVA = readln()
+                if (inputVA.length in 6..9){
+                    var VA = VirtualAccount.getVA(listVA, inputVA)
+                    if (VA == null){
+                        println("Nomor VA tidak terdaftar")
+                        println()
+                    }
+                    else {
+                        print("Jumlah Transfer: ")
+                        var jumlahTF = readln().toInt()
+                        if (jumlahTF + u.bank.biayaVA!! > u.saldo){
+                            println("Saldo Anda tidak mencukupi")
+                        }
+                        else{
+                            print("Transfer Rp $jumlahTF ke ${VA.nama} - ${inputVA}?\n" +
+                                    "(Y/N): ")
+                            var confirm = readln()
+                            if (confirm == "Y"){
+                                var sisa_saldo = u.saldo - (jumlahTF + u.bank.biayaVA!!)
+                                println("Berhasil transfer Rp $jumlahTF ke ${VA.nama} ${inputVA}")
+                                println("Sisa saldo Anda: Rp $sisa_saldo")
+                                u.saldo = sisa_saldo
+                                u.listMutasi.add("(- $jumlahTF) Transfer ke VA ${VA.nama} ${inputVA}")
+                                u.listMutasi.add("(- ${u.bank.biayaVA}) Biaya admin VA")
+                                println()
+                            }
+                            else if (confirm == "N"){
+                                println("Gagal Transfer VA")
+                                println()
+                            }
+                        }
+                    }
+                }
+                else {
+                    println("VA maksimal 6 digit")
+                    println()
+                }
+            } while(!(inputVA.length in 6..9))
+
+//            print("Input nomor VA: ")
+//            var inputVA = readln().toInt()
+//            var kodeVA = u.listVA.firstOrNull() { it.kode == inputVA }
+//
+//            if (kodeVA == null){
+//                println("Nomor VA tidak ditemukan")
+//            }
+//            else {
+//                print("Jumlah Transfer: ")
+//                var jumlahTF = readln().toInt()
+//                if (jumlahTF + u.bank.biayaVA!! > u.saldo){
+//                    println("Saldo Anda tidak mencukupi")
+//                }
+//                else {
+//                    print("Transfer Rp $jumlahTF ke ${kodeVA.nama} - ${kodeVA.kode}?\n" +
+//                            "(Y/N): ")
+//                    var confirm = readln()
+//                    if (confirm == "Y"){
+//                        var sisa_saldo = u.saldo - (jumlahTF + u.bank.biayaVA!!)
+//                        println("Berhasil transfer Rp $jumlahTF ke ${kodeVA.nama} ${kodeVA.kode}")
+//                        println("Sisa saldo Anda: Rp $sisa_saldo")
+//                        u.saldo = sisa_saldo
+//                        u.listMutasi.add("(- $jumlahTF) Transfer ke VA ${kodeVA.nama} ${kodeVA.kode}")
+//                        u.listMutasi.add("(- ${u.bank.biayaVA}) Biaya admin VA")
+//                        println()
+//                    }
+//                    else if (confirm == "N"){
+//                        println("Gagal Transfer VA")
+//                        println()
+//                    }
+//                }
+//            }
+        }
+    } while(menuTF != 99)
+}
