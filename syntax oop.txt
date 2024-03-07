@@ -1,0 +1,11 @@
+1. Default Constructor : Class Bank line 12
+
+2. Inheritance : Class BCA line 3
+
+3. Polymorphism : MainActivity line 124
+
+4. Null Safety : MainActivity line 267
+
+5. Data Class : Class Tabungan line 4
+
+6. Companion object : Class Bank line 20

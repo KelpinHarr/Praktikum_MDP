@@ -2,9 +2,21 @@ package com.example.t2
 
 import kotlin.random.Random
 
-open class Bank (var namaBank:String, var biayaTF:Int, var biayaVA:Int? = 0){
-    var noRek:Int = 0
+open class Bank {
+    var noRek:Int
+    var namaBank:String
+    var biayaTF:Int
+    var biayaVA:Int
 
+    //default constructor
+    constructor(namaBank: String = "", biayaTF:Int? = 0, biayaVA:Int? = 0){
+        this.namaBank = namaBank
+        this.biayaTF = biayaTF!!
+        this.biayaVA = biayaVA!!
+        this.noRek = 0
+    }
+
+    //companion object
     companion object {
         fun getNasabah(listNasabah:MutableList<User>, namaBank: String) :MutableList<User>{
             var list:MutableList<User> = mutableListOf()
